@@ -10,6 +10,7 @@ async function app() {
   const gracePeriod = 10
 
   var paused = false;
+  var loading = true;
 
 
   const loadFromLocalStorage = storageKey => {
@@ -31,11 +32,13 @@ async function app() {
     }
   }
 
+  loading = true;
   loadFromLocalStorage(localStorageKey);
   // Setup the webcam before loading the model so that the user can grant the webcam permission while the model is loading.
   await setupWebcam();
   console.log('Loading mobilenet..');
   net = await mobilenet.load();
+  loading = false;
   console.log('Sucessfully loaded model');
 
 
@@ -79,9 +82,12 @@ async function app() {
   // When clicking a button, add an example for that class.
   document.getElementById('class-a').addEventListener('click', () => addExample(0));
   document.getElementById('class-b').addEventListener('click', () => addExample(1));
-  document.getElementById('pause').addEventListener('click', (evt) => {
-    pause()
-    evt.target.innerHTML = paused ? "Start" : "Pause"
+
+  var pauseBtn = document.getElementById('pause')
+  pauseBtn.addEventListener('click', async (evt) => {
+    await pause()
+    pauseBtn.firstChild.classList.remove(paused ? "fa-pause" : "fa-play")
+    pauseBtn.firstChild.classList.add(paused ? "fa-play" : "fa-pause")
   });
   document.getElementById('reset').addEventListener('click', clearStorage);
 
