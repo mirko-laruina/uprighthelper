@@ -22,6 +22,7 @@ async function app() {
 
     // Pass the intermediate activation to the classifier.
     classifier.addExample(activation, classId);
+    activation.dispose()
   };
 
   // When clicking a button, add an example for that class.
@@ -44,6 +45,8 @@ async function app() {
       else{
         document.body.style.backgroundColor = "rgb(80, 168, 80)";
       }
+
+      activation.dispose()
     }
 
     await tf.nextFrame();
