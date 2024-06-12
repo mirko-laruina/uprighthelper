@@ -20,6 +20,11 @@ button {
 #class-b {
     background: rgb(189, 91, 91);
 }
+
+.btn-gray {
+    background: gray;
+}
+
 .fa {
     padding-right: 0.2rem;
 }
