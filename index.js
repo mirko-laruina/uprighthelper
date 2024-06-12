@@ -58,10 +58,12 @@ async function app() {
   const pause = async () => {
     if(paused){
       console.log("Resuming")
+      await startWebcam()
       paused = false;
     } else {
       console.log("Pausing")
       paused = true;
+      await stopWebcam()
     }    
   }
 
@@ -119,6 +121,14 @@ async function app() {
       activation.dispose()
     }
   }
+}
+
+async function stopWebcam() {
+  webcamElement.srcObject.getVideoTracks().forEach(track => track.stop());
+}
+
+async function startWebcam() {
+  await setupWebcam();
 }
 
 async function setupWebcam() {
