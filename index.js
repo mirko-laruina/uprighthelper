@@ -7,6 +7,7 @@ var audio = new Audio('audio_file.mp3');
 async function app() {
 
   const localStorageKey = "classifierData";
+  const gracePeriod = 10
 
   var paused = false;
 
@@ -84,8 +85,8 @@ async function app() {
 
 
 
-  let firstBadTime = null;
-
+  let startBadTime = null;
+  
   while (true) {
     await tf.nextFrame()
     if(paused){
@@ -100,11 +101,19 @@ async function app() {
 
       const classes = ['A', 'B'];
       if(classes[result.classIndex]=="B"){
-        await audio.play();
+        if(startBadTime === null){
+          startBadTime = new Date()
+        }
+        if(new Date() - startBadTime < gracePeriod * 1000){
+          // grace
+        } else {
+          await audio.play();
+        }
         document.body.style.backgroundColor = "rgb(168, 63, 63)";
       }
       else{
         document.body.style.backgroundColor = "rgb(80, 168, 80)";
+        startBadTime = null
       }
 
       activation.dispose()
